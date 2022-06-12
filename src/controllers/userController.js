@@ -141,5 +141,28 @@ export const getEdit = (req, res) => {
   return res.render("edit-profile", { pageTitle: "Edit Profile" });
 };
 
-export const postEdit = (req, res) => res.render("edit-profile");
+export const postEdit = async (req, res) => {
+  /* req.session.user */
+  const {
+    session: {
+      user: { _id },
+    },
+    body: { name, email, username, location },
+  } = req;
+  /* const id = req.session.user.id
+   const { name, email, username, location } = req.body; == 바로 위 라인*/
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    {
+      name,
+      email,
+      username,
+      location,
+    },
+    { new: true }
+  );
+  req.session.user = updatedUser;
+  return res.redirect("/users/edit");
+};
+
 export const see = (req, res) => res.send("See User");
