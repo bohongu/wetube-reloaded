@@ -145,9 +145,10 @@ export const postEdit = async (req, res) => {
   /* req.session.user */
   const {
     session: {
-      user: { _id },
+      user: { _id, avatarUrl },
     },
     body: { name, email, username, location },
+    file,
   } = req;
   /* const id = req.session.user.id
    const { name, email, username, location } = req.body; == 바로 위 라인*/
@@ -173,6 +174,7 @@ export const postEdit = async (req, res) => {
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     {
+      avatarUrl: file ? file.path : avatarUrl,
       name,
       email,
       username,
