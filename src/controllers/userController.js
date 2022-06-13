@@ -151,6 +151,25 @@ export const postEdit = async (req, res) => {
   } = req;
   /* const id = req.session.user.id
    const { name, email, username, location } = req.body; == 바로 위 라인*/
+  if (req.session.user.email !== email) {
+    const emailExists = await User.exists({ email });
+    if (emailExists) {
+      return res.status(400).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "This email is already taken",
+      });
+    }
+  }
+
+  if (req.session.user.username !== username) {
+    const usernameExists = await User.exists({ username });
+    if (usernameExists) {
+      return res.status(400).render("edit-profile", {
+        pageTitle: "Edit Profile",
+        errorMessage: "This username is already taken",
+      });
+    }
+  }
   const updatedUser = await User.findByIdAndUpdate(
     _id,
     {
